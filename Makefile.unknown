@@ -1,0 +1,30 @@
+CXX = g++
+CXXFLAGS = -std=c++11 -Wall -pthread
+
+# Detect operating system
+ifeq ($(OS),Windows_NT)
+    LDFLAGS = -lws2_32
+    CLIENT_TARGET = client.exe
+    SERVER_TARGET = server.exe
+else
+    LDFLAGS =
+    CLIENT_TARGET = client
+    SERVER_TARGET = server
+endif
+
+all: $(CLIENT_TARGET) $(SERVER_TARGET)
+
+$(CLIENT_TARGET): client.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
+
+$(SERVER_TARGET): server.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
+
+clean:
+ifeq ($(OS),Windows_NT)
+	del $(CLIENT_TARGET) $(SERVER_TARGET)
+else
+	rm -f $(CLIENT_TARGET) $(SERVER_TARGET)
+endif
+
+.PHONY: all clean 
